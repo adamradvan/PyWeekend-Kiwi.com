@@ -1,5 +1,5 @@
 # PyWeekend-Kiwi.com
-Entry task for applying for Python weekend in Bratislava, Slovakia organized by Kiwi.com
+Entry task for applying for Python weekend (April 5–7, 2019) in Bratislava, Slovakia organized by Kiwi.com
 
 # Kiwi.com Python weekend Entry task
 This task was designed to test your Python and problem solving skills and by solving it, you'll provide us with proof that you will benefit from Python Weekend workshop.
