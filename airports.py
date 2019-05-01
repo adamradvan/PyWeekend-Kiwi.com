@@ -1,5 +1,7 @@
 import argparse
 import requests
+import json
+import csv
 
 parser = argparse.ArgumentParser()
 
@@ -11,7 +13,7 @@ group.add_argument(
     "-f", "--full", action="store_true",
     help="Print all airports\' details")
 
-# Arguments that are mutually exclusive to -f/--full argument
+# Arguments that are mutually exclusive to --full argument
 details_group.add_argument(
     "-c", "--cities", action="store_true",
     help="Print cities\' names")
@@ -35,9 +37,6 @@ class Airport:
         self.city = city
         self.coordinates = coordinates  # Tuple(latitude, longtitude)
 
-    def pretty_print(self):
-        pass
-
 
 def parse_obtained_data(data_dict):
     airports = []
@@ -55,23 +54,48 @@ def parse_obtained_data(data_dict):
 def obtain_parse_data_from_API():
     try:
         response = requests.get(
-            "https://api.skypicker.com/locations?type=subentity&term=GB&locale=en-US&active_only=true&location_types=airport&limit=100&sort=name")
+            "https://api.skypicker.com/locations?type=subentity&term=GB&locale=en-US&active_only=true&location_types=airport&limit=10&sort=name")
         response.raise_for_status()
-        parse_obtained_data(response.json())
+        # Returns list of Airport objects
+        return parse_obtained_data(response.json())
     except requests.exceptions.RequestException as e:
         print("Request to API was unsuccessful\n", e)
 
 
-def create_JSON_file(airports_list):
-    pass  # TODO: Create JSON file from list of Airport classes
+def create_attribute_dict(args, airport):
+    airport_dict = {}
+    if args.iata or args.full:
+        airport_dict["iata"] = airport.iata_code
+    if args.names or args.full:
+        airport_dict["name"] = airport.name
+    if args.cities or args.full:
+        airport_dict["city"] = airport.city
+    if args.coords or args.full:
+        airport_dict["coords"] = {
+            "lat": airport.coordinates[0],
+            "lon": airport.coordinates[1]
+        }
+    else:
+        airport_dict["iata"] = airport.iata_code
+        airport_dict["name"] = airport.name
+
+    return airport_dict
 
 
-def display_data(args, airports_list):
-    pass  # TODO: Depending on args, display data about ariports, create Airport.pretty_print() method
+def serialize_data(args, airports_list):
+    airports_data = []
+    for airport in airports_list:
+        airports_data.append(create_attribute_dict(args, airport))
+
+    # Standard output
+    print(airports_data)
+
+    # JSON File
+    with open("airports_data.json", "w") as json_file:
+        json.dump(airports_data, json_file, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
     airports_list = obtain_parse_data_from_API()
-    create_JSON_file(airports_list)
-    display_data(args, airports_list)
+    serialize_data(args, airports_list)
