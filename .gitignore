@@ -103,3 +103,6 @@ kiwi-airports-venv
 
 # mypy
 .mypy_cache/
+
+# output file
+airports_data.json
