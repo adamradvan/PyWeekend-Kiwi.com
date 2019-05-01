@@ -3,29 +3,33 @@ import requests
 import json
 import csv
 
-parser = argparse.ArgumentParser()
 
-# Group for --full and details_group, which contains other args
-group = parser.add_mutually_exclusive_group()
-details_group = group.add_mutually_exclusive_group()
+def parse_arguments():
+    parser = argparse.ArgumentParser()
 
-group.add_argument(
-    "-f", "--full", action="store_true",
-    help="Print all airports\' details")
+    # Group for --full and details_group, which contains other args
+    group = parser.add_mutually_exclusive_group()
+    details_group = group.add_mutually_exclusive_group()
 
-# Arguments that are mutually exclusive to --full argument
-details_group.add_argument(
-    "-c", "--cities", action="store_true",
-    help="Print cities\' names")
-details_group.add_argument(
-    "-i", "--iata", action="store_true",
-    help="Print IATA codes")
-details_group.add_argument(
-    "-co", "--coords", action="store_true",
-    help="Print airports\' coordinates")
-details_group.add_argument(
-    "-n", "--names", action="store_true",
-    help="Print airports\' names")
+    group.add_argument(
+        "-f", "--full", action="store_true",
+        help="Print all airports\' details")
+
+    # Arguments that are mutually exclusive to --full argument
+    details_group.add_argument(
+        "-c", "--cities", action="store_true",
+        help="Print cities\' names")
+    details_group.add_argument(
+        "-i", "--iata", action="store_true",
+        help="Print IATA codes")
+    details_group.add_argument(
+        "-co", "--coords", action="store_true",
+        help="Print airports\' coordinates")
+    details_group.add_argument(
+        "-n", "--names", action="store_true",
+        help="Print airports\' names")
+
+    return parser.parse_args()
 
 
 class Airport:
@@ -96,6 +100,6 @@ def serialize_data(args, airports_list):
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = parse_arguments()
     airports_list = obtain_parse_data_from_API()
     serialize_data(args, airports_list)
