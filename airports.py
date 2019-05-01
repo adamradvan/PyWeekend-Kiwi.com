@@ -1,7 +1,6 @@
 import argparse
 import requests
 import json
-import csv
 
 
 def parse_arguments():
@@ -58,7 +57,7 @@ def parse_obtained_data(data_dict):
 def obtain_parse_data_from_API():
     try:
         response = requests.get(
-            "https://api.skypicker.com/locations?type=subentity&term=GB&locale=en-US&active_only=true&location_types=airport&limit=10&sort=name")
+            "https://api.skypicker.com/locations?type=subentity&term=GB&locale=en-US&active_only=true&location_types=airport&limit=100&sort=name")
         response.raise_for_status()
         # Returns list of Airport objects
         return parse_obtained_data(response.json())
