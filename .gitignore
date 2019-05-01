@@ -106,3 +106,6 @@ kiwi-airports-venv
 
 # output file
 airports_data.json
+
+# editor
+.vscode/
